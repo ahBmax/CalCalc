@@ -1,0 +1,46 @@
+{
+  "name": "advanced-ai-tdee-calculator",
+  "version": "2.0.0",
+  "description": "The most advanced AI-powered TDEE and macro calculator with personalized coaching",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "tsc",
+    "deploy": "vercel --prod",
+    "type-check": "tsc --noEmit",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts api/**/*.ts",
+    "format": "prettier --write src/**/*.ts api/**/*.ts"
+  },
+  "dependencies": {
+    "@vercel/node": "^3.0.0",
+    "openai": "^4.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vercel": "^32.0.0"
+  },
+  "keywords": [
+    "tdee",
+    "calorie-calculator",
+    "nutrition",
+    "fitness",
+    "ai",
+    "macro-calculator",
+    "personal-training",
+    "lead-magnet",
+    "openai",
+    "vercel"
+  ],
+  "author": "Your PT Business",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

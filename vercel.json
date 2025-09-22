@@ -1,0 +1,38 @@
+{
+  "functions": {
+    "api/tdee.ts": {
+      "maxDuration": 30
+    },
+    "api/analyze-lifestyle.ts": {
+      "maxDuration": 20
+    },
+    "api/coaching.ts": {
+      "maxDuration": 25
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/public/index.html"
+    }
+  ]
+}
