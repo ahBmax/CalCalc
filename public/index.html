@@ -493,19 +493,88 @@
             e.preventDefault();
             
             const formData = new FormData(this);
-            const data = Object.fromEntries(formData.entries());
+            const raw = Object.fromEntries(formData.entries());
+            // Map simple form -> API request shape expected by /api/tdee
+            const payload = {
+                profile: {
+                    name: 'Web User',
+                    email: 'na@example.com',
+                    age: parseInt(raw.age, 10),
+                    gender: raw.gender,
+                    height: parseFloat(raw.height),
+                    weight: parseFloat(raw.weight),
+                    goal: raw.goal === 'lose' ? 'fat_loss' : (raw.goal === 'gain' ? 'muscle_gain' : 'maintenance'),
+                    lifestyle: {
+                        daily_routine_description: 'Submitted via web form',
+                        job_type: 'desk_job',
+                        job_activity_level: raw.activity === 'sedentary' ? 'sedentary' : (raw.activity === 'light' ? 'light' : (raw.activity === 'moderate' ? 'moderate' : (raw.activity === 'very' ? 'active' : 'very_active'))),
+                        commute_type: 'car',
+                        household_activities: [],
+                        household_activity_level: 'light',
+                        hobbies: [],
+                        leisure_activity_level: 'light',
+                        fidgeting_level: 'some_fidgeting',
+                        standing_vs_sitting: 'mostly_sitting'
+                    },
+                    training: {
+                        training_description: 'Not provided',
+                        training_types: [],
+                        training_frequency_per_week: raw.activity === 'sedentary' ? 0 : (raw.activity === 'light' ? 1 : (raw.activity === 'moderate' ? 3 : (raw.activity === 'very' ? 5 : 6))),
+                        training_duration_minutes: 45,
+                        training_intensity: raw.activity === 'sedentary' ? 'low' : (raw.activity === 'light' ? 'low' : (raw.activity === 'moderate' ? 'moderate' : 'high')),
+                        equipment_access: { home_gym: false, commercial_gym: false, cardio_equipment: false, free_weights: false, machines: false, resistance_bands: false, bodyweight_only: true },
+                        training_environment: 'home',
+                        training_experience_years: 0
+                    },
+                    health: {
+                        sleep_hours_per_night: 7,
+                        sleep_quality: 'good',
+                        sleep_schedule_consistency: 'mostly_consistent',
+                        stress_level: 'moderate',
+                        stress_sources: [],
+                        stress_management: [],
+                        medical_conditions: [],
+                        medications: [],
+                        injuries: [],
+                        limitations: [],
+                        previous_dieting_experience: 'some'
+                    },
+                    behavioral: {
+                        meal_frequency: '3_meals',
+                        meal_timing_preference: 'normal',
+                        cooking_ability: 'intermediate',
+                        meal_prep_frequency: 'sometimes',
+                        dietary_restrictions: [],
+                        food_preferences: [],
+                        disliked_foods: [],
+                        allergies: [],
+                        adherence_risks: [],
+                        motivation_level: 'moderate',
+                        support_system: 'moderate',
+                        previous_diet_success: 'some',
+                        previous_diet_failures: [],
+                        biggest_challenges: []
+                    },
+                    extended: {
+                        step_count_band: raw.activity === 'sedentary' ? 'under_5k' : (raw.activity === 'light' ? '5k-8k' : (raw.activity === 'moderate' ? '8k-12k' : '12k-15k'))
+                    }
+                },
+                ai_mode: false,
+                include_coaching: true,
+                include_mini_plan: false
+            };
             
             // Show loading
             document.getElementById('loading').classList.add('show');
             document.getElementById('results').classList.remove('show');
             
             try {
-                const response = await fetch('/api/calculate-tdee', {
+                const response = await fetch('/api/tdee', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(payload)
                 });
                 
                 if (!response.ok) {

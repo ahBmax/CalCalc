@@ -4,7 +4,7 @@
   "description": "The most advanced AI-powered TDEE and macro calculator with personalized coaching",
   "main": "index.js",
   "scripts": {
-    "dev": "vercel dev",
+    "dev": "echo Use: npx vercel dev",
     "build": "tsc",
     "deploy": "vercel --prod",
     "type-check": "tsc --noEmit",
