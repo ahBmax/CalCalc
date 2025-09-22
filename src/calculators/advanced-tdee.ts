@@ -47,7 +47,7 @@ export class AdvancedTDEECalculator {
     const { lifestyle, training, health } = profile;
     
     // Base activity multipliers
-    const baseMultipliers = {
+    const baseMultipliers: Record<string, number> = {
       'sedentary': 1.2,
       'light': 1.375,
       'moderate': 1.55,
@@ -94,16 +94,16 @@ export class AdvancedTDEECalculator {
     adjustment += frequencyMultiplier;
     
     // Training intensity adjustment
-    const intensityMultipliers = {
+    const intensityMultipliers: Record<string, number> = {
       'low': 0.02,
       'moderate': 0.05,
       'high': 0.08,
       'very_high': 0.12
     };
-    adjustment += intensityMultipliers[training.training_intensity] || 0.05;
+    adjustment += intensityMultipliers[String(training.training_intensity)] || 0.05;
     
     // Training type adjustments
-    const typeAdjustments = {
+    const typeAdjustments: Record<string, number> = {
       'powerlifting': 0.03,
       'bodybuilding': 0.02,
       'crossfit': 0.08,
@@ -121,7 +121,7 @@ export class AdvancedTDEECalculator {
     
     // Add adjustment for primary training type
     if (training.training_types.length > 0) {
-      const primaryType = training.training_types[0];
+      const primaryType = String(training.training_types[0]);
       adjustment += typeAdjustments[primaryType] || 0.03;
     }
     
@@ -140,7 +140,7 @@ export class AdvancedTDEECalculator {
     let adjustment = 0;
     
     // Job type adjustments
-    const jobAdjustments = {
+    const jobAdjustments: Record<string, number> = {
       'desk_job': -0.05,
       'standing_job': 0.02,
       'physical_job': 0.08,
@@ -148,44 +148,44 @@ export class AdvancedTDEECalculator {
       'unemployed': -0.02,
       'student': 0.01
     };
-    adjustment += jobAdjustments[lifestyle.job_type] || 0;
+    adjustment += jobAdjustments[String(lifestyle.job_type)] || 0;
     
     // Commute adjustments
-    const commuteAdjustments = {
+    const commuteAdjustments: Record<string, number> = {
       'car': -0.02,
       'public_transport': 0.01,
       'walking': 0.03,
       'cycling': 0.05,
       'remote': -0.01
     };
-    adjustment += commuteAdjustments[lifestyle.commute_type] || 0;
+    adjustment += commuteAdjustments[String(lifestyle.commute_type)] || 0;
     
     // Household activity adjustments
-    const householdAdjustments = {
+    const householdAdjustments: Record<string, number> = {
       'minimal': -0.02,
       'light': 0.01,
       'moderate': 0.03,
       'active': 0.05
     };
-    adjustment += householdAdjustments[lifestyle.household_activity_level] || 0;
+    adjustment += householdAdjustments[String(lifestyle.household_activity_level)] || 0;
     
     // Fidgeting adjustments
-    const fidgetingAdjustments = {
+    const fidgetingAdjustments: Record<string, number> = {
       'very_still': -0.03,
       'some_fidgeting': 0.01,
       'moderate_fidgeting': 0.03,
       'lots_of_fidgeting': 0.05
     };
-    adjustment += fidgetingAdjustments[lifestyle.fidgeting_level] || 0;
+    adjustment += fidgetingAdjustments[String(lifestyle.fidgeting_level)] || 0;
     
     // Standing vs sitting
-    const standingAdjustments = {
+    const standingAdjustments: Record<string, number> = {
       'mostly_sitting': -0.03,
       'mixed': 0.01,
       'mostly_standing': 0.03,
       'always_moving': 0.05
     };
-    adjustment += standingAdjustments[lifestyle.standing_vs_sitting] || 0;
+    adjustment += standingAdjustments[String(lifestyle.standing_vs_sitting)] || 0;
     
     return adjustment;
   }
@@ -197,13 +197,13 @@ export class AdvancedTDEECalculator {
     let adjustment = 0;
     
     // Sleep quality adjustments
-    const sleepAdjustments = {
+    const sleepAdjustments: Record<string, number> = {
       'poor': -0.05,
       'fair': -0.02,
       'good': 0,
       'excellent': 0.02
     };
-    adjustment += sleepAdjustments[health.sleep_quality] || 0;
+    adjustment += sleepAdjustments[String(health.sleep_quality)] || 0;
     
     // Sleep duration adjustments
     if (health.sleep_hours_per_night < 6) {
@@ -213,14 +213,14 @@ export class AdvancedTDEECalculator {
     }
     
     // Stress adjustments
-    const stressAdjustments = {
+    const stressAdjustments: Record<string, number> = {
       'very_low': 0.02,
       'low': 0.01,
       'moderate': 0,
       'high': -0.02,
       'very_high': -0.05
     };
-    adjustment += stressAdjustments[health.stress_level] || 0;
+    adjustment += stressAdjustments[String(health.stress_level)] || 0;
     
     // Medical condition adjustments
     if (health.thyroid_issues) {
@@ -317,13 +317,13 @@ export class AdvancedTDEECalculator {
   private static calculateProtein(
     weight: number, 
     training: any, 
-    goal: string, 
+    goal: 'maintenance' | 'fat_loss' | 'muscle_gain' | 'recomposition', 
     gender: string
   ): number {
     let proteinPerKg: number;
     
     // Base protein by goal
-    const baseProtein = {
+    const baseProtein: Record<'fat_loss' | 'muscle_gain' | 'recomposition' | 'maintenance', number> = {
       'fat_loss': 2.2,
       'muscle_gain': 2.2,
       'recomposition': 2.4,
@@ -333,7 +333,7 @@ export class AdvancedTDEECalculator {
     proteinPerKg = baseProtein[goal] || 2.0;
     
     // Training type adjustments
-    const trainingAdjustments = {
+    const trainingAdjustments: Record<string, number> = {
       'powerlifting': 0.2,
       'bodybuilding': 0.3,
       'crossfit': 0.2,
@@ -351,7 +351,7 @@ export class AdvancedTDEECalculator {
     
     // Add training type adjustment
     if (training.training_types.length > 0) {
-      const primaryType = training.training_types[0];
+      const primaryType = String(training.training_types[0]);
       proteinPerKg += trainingAdjustments[primaryType] || 0;
     }
     
@@ -375,7 +375,7 @@ export class AdvancedTDEECalculator {
    * Calculate timing recommendations
    */
   static calculateTimingRecommendations(profile: CompleteUserProfile): TimingRecommendations {
-    const { training, lifestyle } = profile;
+    const { training } = profile;
     
     // Pre-workout recommendations
     let preWorkout = "Eat a small meal 1-2 hours before training with carbs and protein.";
@@ -399,9 +399,9 @@ export class AdvancedTDEECalculator {
     
     // Meal timing recommendations
     let mealTiming = "Eat 3-4 meals per day with consistent timing.";
-    if (lifestyle.behavioral.meal_frequency === '6+_meals') {
+    if (profile.behavioral.meal_frequency === '6+_meals') {
       mealTiming = "Eat 6+ smaller meals throughout the day to maintain energy levels.";
-    } else if (lifestyle.behavioral.meal_timing_preference === 'night_owl') {
+    } else if (profile.behavioral.meal_timing_preference === 'night_owl') {
       mealTiming = "Eat your largest meal in the evening when you're most active and hungry.";
     }
     

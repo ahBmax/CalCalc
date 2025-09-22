@@ -262,7 +262,7 @@ Be thorough and accurate in your analysis.`;
     let score = 5; // Base score
     
     // Job activity
-    const jobScores = {
+    const jobScores: Record<string, number> = {
       'desk_job': 3,
       'standing_job': 5,
       'physical_job': 8,
@@ -270,35 +270,35 @@ Be thorough and accurate in your analysis.`;
       'unemployed': 4,
       'student': 5
     };
-    score = (score + jobScores[lifestyle.job_type]) / 2;
+    score = (score + jobScores[String(lifestyle.job_type)]) / 2;
     
     // Commute
-    const commuteScores = {
+    const commuteScores: Record<string, number> = {
       'car': 0,
       'public_transport': 1,
       'walking': 3,
       'cycling': 4,
       'remote': 0
     };
-    score += commuteScores[lifestyle.commute_type] || 0;
+    score += commuteScores[String(lifestyle.commute_type)] || 0;
     
     // Household activities
-    const householdScores = {
+    const householdScores: Record<string, number> = {
       'minimal': 0,
       'light': 1,
       'moderate': 2,
       'active': 3
     };
-    score += householdScores[lifestyle.household_activity_level] || 0;
+    score += householdScores[String(lifestyle.household_activity_level)] || 0;
     
     // Fidgeting
-    const fidgetingScores = {
+    const fidgetingScores: Record<string, number> = {
       'very_still': -1,
       'some_fidgeting': 0,
       'moderate_fidgeting': 1,
       'lots_of_fidgeting': 2
     };
-    score += fidgetingScores[lifestyle.fidgeting_level] || 0;
+    score += fidgetingScores[String(lifestyle.fidgeting_level)] || 0;
     
     return Math.max(1, Math.min(10, Math.round(score)));
   }
@@ -313,13 +313,13 @@ Be thorough and accurate in your analysis.`;
     score += training.training_frequency_per_week * 0.5;
     
     // Training intensity
-    const intensityScores = {
+    const intensityScores: Record<string, number> = {
       'low': 2,
       'moderate': 5,
       'high': 8,
       'very_high': 10
     };
-    score = (score + intensityScores[training.training_intensity]) / 2;
+    score = (score + intensityScores[String(training.training_intensity)]) / 2;
     
     // Training experience
     if (training.training_experience_years > 5) {
@@ -336,7 +336,7 @@ Be thorough and accurate in your analysis.`;
     let score = 7; // Base score
     
     // Motivation level
-    const motivationScores = {
+    const motivationScores: Record<string, number> = {
       'very_low': 2,
       'low': 4,
       'moderate': 6,
@@ -349,13 +349,13 @@ Be thorough and accurate in your analysis.`;
     score -= behavioral.adherence_risks.length * 0.5;
     
     // Support system
-    const supportScores = {
+    const supportScores: Record<string, number> = {
       'none': 0,
       'minimal': 1,
       'moderate': 2,
       'strong': 3
     };
-    score += supportScores[behavioral.support_system] || 0;
+    score += supportScores[String(behavioral.support_system)] || 0;
     
     return Math.max(1, Math.min(10, Math.round(score)));
   }
